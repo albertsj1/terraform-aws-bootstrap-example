@@ -1,0 +1,47 @@
+[project]
+name = "terraform-aws-bootstrap-example"
+version = "0.1.0"
+description = "An example project for bootstrapping Terraform on AWS"
+authors = [
+    {name = "John Alberts", email = "john.m.alberts@gmail.com"},
+]
+dependencies = [
+]
+requires-python = ">=3.12"
+readme = "README.md"
+license = {text = "MIT"}
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest-cov>=4.1.0",
+    "requests>=2.31.0",
+    "pytest-xprocess>=0.23.0",
+    "pre-commit>=3.5.0",
+    "ruff>=0.1.6",
+    "pytest>=7.4.3"
+]
+
+[project.optional-dependencies]
+
+[tool.pytest.ini_options]
+addopts = "--cov --junitxml=pytest.xml --cov-report=term-missing --cov-report=lcov --cov-report=xml --cov-report=html --cov-fail-under=60 --cov-branch"
+testpaths = ["tests"]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.coverage.lcov]
+output = "coverage/lcov.info"
+
+[tool.coverage.xml]
+output = "coverage/coverage.xml"
+
+[tool.pdm.scripts]
+test = {cmd = "pytest"}
+start = {cmd = "python3 -m main"}
+clean = {shell = """rm -rf {.,**}/{htmlcov,.coverage,coverage.xml,coverage,.pytest_cache,\
+.mypy_cache,.pdm,.pdm-python,build,dist,*.egg-info,__pycache__,.ruff_cache,.ruff_history,.ruff_lock}"""}
+clean_tf = {shell = """rm -rf \
+iac/**/{.terraform,terraform.tfstate*,*.plan,autogen_state.tf,\
+docker_build_push.sh}"""}
+clean_all = {composite = ["clean", "clean_tf"]}

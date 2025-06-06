@@ -1,0 +1,27 @@
+# This uses the VSCode Marketplace REST Client extension.
+# from: https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+# Use below for local testing
+@baseUrl = http://localhost:8000
+
+# Example to use when testing on a remote server
+# Get the base url by running `terraform output -json | jq -r '.baseurl.value'`
+# @baseUrl = <base url>
+
+### Check health
+GET {{baseUrl}}/health
+
+### Get Fibonacci series for 0
+GET {{baseUrl}}/?n=0
+
+### Get Fibonacci series for 2
+GET {{baseUrl}}/?n=2
+
+### Use a prompt to get n
+# @prompt n
+{{baseUrl}}/?n={{n}}
+
+### Get Fibonacci series for 20579
+# Should generate an error
+{{baseUrl}}/?n=20579
+
+###

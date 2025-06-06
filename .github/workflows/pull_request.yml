@@ -1,0 +1,33 @@
+name: Build and Run Tests on PR
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v3
+        with:
+          python-version: 3.12
+          cache: true
+
+      - name: Install dependencies
+        run: pdm install
+
+      - name: Run Tests
+        run: pdm run pytest | tee pytest-coverage.txt
+
+      - name: Pytest coverage comment
+        id: coverageComment
+        uses: MishaKav/pytest-coverage-comment@main
+        with:
+          pytest-coverage-path: ./pytest-coverage.txt
+          pytest-xml-coverage-path: ./coverage/coverage.xml
+          junitxml-path: ./pytest.xml
